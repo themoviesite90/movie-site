@@ -55,3 +55,23 @@ function addToFavorites(movie) {
     alert("Already in favorites");
   }
 }
+const favBtn = document.getElementById("favBtn");
+
+let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+favBtn.onclick = () => {
+  const exists = favorites.find(m => m.id == movieData.id);
+
+  if (!exists) {
+    favorites.push({
+      id: movieData.id,
+      title: movieData.title,
+      poster: movieData.poster_path
+    });
+
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+    alert("Added to Favorites ❤️");
+  } else {
+    alert("Already in Favorites!");
+  }
+};
