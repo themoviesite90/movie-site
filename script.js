@@ -22,9 +22,9 @@ function showMovies(movies) {
     div.className = "movie";
 
     div.innerHTML = `
-      <img src="${IMG + movie.poster_path}">
-      <p>${movie.title}</p>
-    `;
+  <img src="${IMG + movie.poster_path}">
+  <div class="title">${movie.title}</div>
+`;
 
     moviesDiv.appendChild(div);
   });
