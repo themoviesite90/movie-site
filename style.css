@@ -150,3 +150,12 @@ header h2 {
   color: white;
   white-space: nowrap;
 }
+.fav-btn {
+  width: 100%;
+  padding: 6px;
+  border: none;
+  background: crimson;
+  color: white;
+  border-radius: 5px;
+  margin-top: 5px;
+}
