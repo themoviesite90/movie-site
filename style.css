@@ -1,1 +1,37 @@
-.
+body {
+  margin: 0;
+  background: #0f172a;
+  color: white;
+  font-family: Arial;
+}
+
+h2 {
+  text-align: center;
+  padding: 10px;
+  background: #020617;
+  margin: 0;
+}
+
+#movies {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 12px;
+}
+
+.movie {
+  background: #020617;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.movie img {
+  width: 100%;
+  display: block;
+}
+
+.movie p {
+  font-size: 14px;
+  padding: 8px;
+  margin: 0;
+}
