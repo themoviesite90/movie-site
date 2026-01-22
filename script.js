@@ -20,6 +20,9 @@ function showMovies(movies) {
 
     const div = document.createElement("div");
     div.className = "movie";
+div.onclick = () => {
+  window.location.href = `movie.html?id=${movie.id}`;
+};
 
     div.innerHTML = `
   <img src="${IMG + movie.poster_path}">
