@@ -3,14 +3,19 @@ const API_KEY = "b9864cdbbdcef170f412314e777c14f5";
 const IMG = "https://image.tmdb.org/t/p/w500";
 const TRENDING = `https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}`;
 const SEARCH = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=`;
+const DISCOVER = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_genres=`;
 
 const moviesDiv = document.getElementById("movies");
 const searchInput = document.getElementById("search");
 
 // Load trending first
-fetch(TRENDING)
-  .then(res => res.json())
-  .then(data => showMovies(data.results));
+loadMovies(TRENDING);
+
+function loadMovies(url) {
+  fetch(url)
+    .then(res => res.json())
+    .then(data => showMovies(data.results));
+}
 
 function showMovies(movies) {
   moviesDiv.innerHTML = "";
@@ -20,14 +25,15 @@ function showMovies(movies) {
 
     const div = document.createElement("div");
     div.className = "movie";
-div.onclick = () => {
-  window.location.href = `movie.html?id=${movie.id}`;
-};
 
     div.innerHTML = `
-  <img src="${IMG + movie.poster_path}">
-  <div class="title">${movie.title}</div>
-`;
+      <img src="${IMG + movie.poster_path}">
+      <div class="title">${movie.title}</div>
+    `;
+
+    div.onclick = () => {
+      window.location.href = `movie.html?id=${movie.id}`;
+    };
 
     moviesDiv.appendChild(div);
   });
@@ -38,12 +44,21 @@ searchInput.addEventListener("keyup", function () {
   const value = searchInput.value;
 
   if (value.trim() === "") {
-    fetch(TRENDING)
-      .then(res => res.json())
-      .then(data => showMovies(data.results));
+    loadMovies(TRENDING);
   } else {
-    fetch(SEARCH + value)
-      .then(res => res.json())
-      .then(data => showMovies(data.results));
+    loadMovies(SEARCH + value);
   }
+});
+
+// Categories
+document.querySelectorAll(".categories button").forEach(btn => {
+  btn.onclick = () => {
+    const genre = btn.getAttribute("data-genre");
+
+    if (genre === "trending") {
+      loadMovies(TRENDING);
+    } else {
+      loadMovies(DISCOVER + genre);
+    }
+  };
 });
