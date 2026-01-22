@@ -1,4 +1,4 @@
-const API_KEY = "PUT_YOUR_API_KEY_HERE";
+const API_KEY = "b9864cdbbdcef170f412314e777c14f5";
 
 const IMG = "https://image.tmdb.org/t/p/w500";
 const TRENDING = `https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}`;
