@@ -145,3 +145,19 @@ document.querySelectorAll(".industry-filters button").forEach(btn => {
 // ================= START =================
 loadHero();
 loadMovies(getTrending());
+// Fixed search functionality
+searchInput.addEventListener('input', function(e) {
+  const query = e.target.value.trim();
+  
+  if (query.length === 0) {
+    loadMovies(getTrending());
+    return;
+  }
+  
+  // Debounce search
+  clearTimeout(window.searchTimeout);
+  window.searchTimeout = setTimeout(() => {
+    const url = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(query)}`;
+    loadMovies(url);
+  }, 500);
+});
