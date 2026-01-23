@@ -9,6 +9,7 @@ const moviesDiv = document.getElementById("movies");
 const searchInput = document.getElementById("search");
 
 // Load trending first
+loadHero();
 loadMovies(TRENDING);
 
 function loadMovies(url) {
