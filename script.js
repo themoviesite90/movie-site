@@ -27,6 +27,36 @@ function loadHero() {
 }
 
 function showHero() {
+  div.innerHTML = `
+  <img src="${IMG + movie.poster_path}" alt="${movie.title || movie.name}">
+  <div class="title">${movie.title || movie.name}</div>
+  <button class="fav-btn" id="fav-${movie.id}">❤️ Add to My List</button>
+`;
+
+const favBtn = div.querySelector(`#fav-${movie.id}`);
+favBtn.onclick = async (e) => {
+  e.stopPropagation(); // Prevent movie click
+  const user = auth.currentUser;
+  if (!user) {
+    alert("Please login to add to favorites!");
+    return;
+  }
+  
+  const docRef = doc(db, "users", user.uid);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists() && docSnap.data().favorites?.includes(movie.id)) {
+    // Remove from favorites
+    await updateDoc(docRef, {
+      favorites: arrayRemove(movie.id)
+    });
+    favBtn.innerText = "❤️ Add to My List";
+  } else {
+    // Add to favorites
+    await setDoc(docRef, { favorites: arrayUnion(movie.id) }, { merge: true });
+    favBtn.innerText = "💛 Remove from My List";
+  }
+};
   const movie = heroMovies[heroIndex];
   if (!movie) return;
 
@@ -64,6 +94,36 @@ function loadMovies(url) {
 }
 
 function showMovies(movies) {
+  div.innerHTML = `
+  <img src="${IMG + movie.poster_path}" alt="${movie.title || movie.name}">
+  <div class="title">${movie.title || movie.name}</div>
+  <button class="fav-btn" id="fav-${movie.id}">❤️ Add to My List</button>
+`;
+
+const favBtn = div.querySelector(`#fav-${movie.id}`);
+favBtn.onclick = async (e) => {
+  e.stopPropagation(); // Prevent movie click
+  const user = auth.currentUser;
+  if (!user) {
+    alert("Please login to add to favorites!");
+    return;
+  }
+  
+  const docRef = doc(db, "users", user.uid);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists() && docSnap.data().favorites?.includes(movie.id)) {
+    // Remove from favorites
+    await updateDoc(docRef, {
+      favorites: arrayRemove(movie.id)
+    });
+    favBtn.innerText = "❤️ Add to My List";
+  } else {
+    // Add to favorites
+    await setDoc(docRef, { favorites: arrayUnion(movie.id) }, { merge: true });
+    favBtn.innerText = "💛 Remove from My List";
+  }
+};
   moviesDiv.innerHTML = "";
 
   movies.forEach(movie => {
