@@ -1,18 +1,40 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>My Favorites</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+import { auth, db } from './auth.js';
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-<header>
-  <h2>❤️ My Favorites</h2>
-  <a href="index.html" style="color:white">⬅ Back</a>
-</header>
+const moviesDiv = document.getElementById("movies");
 
-<div id="movies"></div>
+auth.onAuthStateChanged(async (user) => {
+  if (!user) {
+    moviesDiv.innerHTML = "<p>Please login to see your favorites.</p>";
+    return;
+  }
 
-<script src="favorites.js"></script>
-</body>
-</html>
+  const docRef = doc(db, "users", user.uid);
+  const docSnap = await getDoc(docRef);
+
+  if (!docSnap.exists() || !docSnap.data().favorites?.length) {
+    moviesDiv.innerHTML = "<p>No favorites yet.</p>";
+    return;
+  }
+
+  const favoriteIds = docSnap.data().favorites;
+
+  // Fetch movie details for each favorite
+  favoriteIds.forEach(async id => {
+    const res = await fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}`);
+    const movie = await res.json();
+
+    const div = document.createElement("div");
+    div.className = "movie";
+    div.innerHTML = `
+      <img src="${IMG + movie.poster_path}" alt="${movie.title}">
+      <div class="title">${movie.title}</div>
+    `;
+
+    div.onclick = () => {
+      window.location.href = `movie.html?id=${movie.id}&type=movie`;
+    };
+
+    moviesDiv.appendChild(div);
+  });
+});
