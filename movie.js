@@ -1,77 +1,45 @@
 const API_KEY = "b9864cdbbdcef170f412314e777c14f5";
 const IMG = "https://image.tmdb.org/t/p/w500";
 
-const id = new URLSearchParams(window.location.search).get("id");
-const detailsDiv = document.getElementById("movieDetails");
+const params = new URLSearchParams(window.location.search);
+const id = params.get("id");
+const type = params.get("type") || "movie";
 
-fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}`)
+function getDetails() {
+  return `https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}`;
+}
+
+function getTrailer() {
+  return `https://api.themoviedb.org/3/${type}/${id}/videos?api_key=${API_KEY}`;
+}
+
+// Load details
+fetch(getDetails())
   .then(res => res.json())
   .then(movie => {
-    showDetails(movie);
+    document.getElementById("title").innerText = movie.title || movie.name;
+    document.getElementById("overview").innerText = movie.overview;
+    document.getElementById("rating").innerText = "⭐ " + movie.vote_average.toFixed(1);
+
+    document.getElementById("meta").innerText =
+      `📅 ${movie.release_date || movie.first_air_date} | 🌍 ${movie.original_language.toUpperCase()}`;
+
+    document.getElementById("poster").src = IMG + movie.poster_path;
+
+    document.getElementById("detailsHero").style.backgroundImage =
+      `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`;
   });
 
-function showDetails(movie) {
-  detailsDiv.innerHTML = `
-    <div class="details-poster">
-      <img src="${IMG + movie.poster_path}">
-    </div>
-
-    <div class="details-info">
-      <h1>${movie.title}</h1>
-      <p class="rating">⭐ ${movie.vote_average}</p>
-      <p class="overview">${movie.overview}</p>
-
-      <div class="buttons">
-        <button id="trailerBtn">▶ Watch Trailer</button>
-        <button id="favBtn">❤️ Add to Favorites</button>
-      </div>
-    </div>
-  `;
-
-  document.getElementById("trailerBtn").onclick = () => openTrailer(movie.id);
-  document.getElementById("favBtn").onclick = () => addToFavorites(movie);
-}
-
-function openTrailer(id) {
-  fetch(`https://api.themoviedb.org/3/movie/${id}/videos?api_key=${API_KEY}`)
+// Trailer button
+document.getElementById("trailerBtn").onclick = () => {
+  fetch(getTrailer())
     .then(res => res.json())
     .then(data => {
-      const trailer = data.results.find(v => v.site === "YouTube");
+      const trailer = data.results.find(v => v.type === "Trailer");
       if (trailer) {
-        window.open(`https://youtube.com/watch?v=${trailer.key}`);
+        window.open(`https://www.youtube.com/watch?v=${trailer.key}`);
       } else {
-        alert("No trailer found");
+        alert("No trailer found!");
       }
     });
-}
-
-function addToFavorites(movie) {
-  let favs = JSON.parse(localStorage.getItem("favorites")) || [];
-  if (!favs.find(m => m.id === movie.id)) {
-    favs.push({ id: movie.id, title: movie.title, poster: movie.poster_path });
-    localStorage.setItem("favorites", JSON.stringify(favs));
-    alert("Added to favorites!");
-  } else {
-    alert("Already in favorites");
-  }
-}
-const favBtn = document.getElementById("favBtn");
-
-let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
-
-favBtn.onclick = () => {
-  const exists = favorites.find(m => m.id == movieData.id);
-
-  if (!exists) {
-    favorites.push({
-      id: movieData.id,
-      title: movieData.title,
-      poster: movieData.poster_path
-    });
-
-    localStorage.setItem("favorites", JSON.stringify(favorites));
-    alert("Added to Favorites ❤️");
-  } else {
-    alert("Already in Favorites!");
-  }
 };
