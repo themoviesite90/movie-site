@@ -1,28 +1,38 @@
 const API_KEY = "b9864cdbbdcef170f412314e777c14f5";
 
-let currentType = "movie"; // or "tv"
+const IMG = "https://image.tmdb.org/t/p/w500";
 
+let currentType = "movie";
+
+const moviesDiv = document.getElementById("movies");
+const searchInput = document.getElementById("search");
+
+// URLs
 function getTrending() {
   return `https://api.themoviedb.org/3/trending/${currentType}/week?api_key=${API_KEY}`;
+}
+
+function getSearch(q) {
+  return `https://api.themoviedb.org/3/search/${currentType}?api_key=${API_KEY}&query=${q}`;
 }
 
 function getDiscoverByLang(lang) {
   return `https://api.themoviedb.org/3/discover/${currentType}?api_key=${API_KEY}&with_original_language=${lang}`;
 }
 
-const moviesDiv = document.getElementById("movies");
-const searchInput = document.getElementById("search");
-
-// Load trending first
+// Load
 loadHero();
-loadMovies(TRENDING);
+loadMovies(getTrending());
 
+// Fetch
 function loadMovies(url) {
   fetch(url)
     .then(res => res.json())
-    .then(data => showMovies(data.results));
+    .then(data => showMovies(data.results))
+    .catch(err => console.log(err));
 }
 
+// Show
 function showMovies(movies) {
   moviesDiv.innerHTML = "";
 
@@ -34,11 +44,11 @@ function showMovies(movies) {
 
     div.innerHTML = `
       <img src="${IMG + movie.poster_path}">
-      <div class="title">${movie.title}</div>
+      <div class="title">${movie.title || movie.name}</div>
     `;
 
     div.onclick = () => {
-      window.location.href = `movie.html?id=${movie.id}`;
+      window.location.href = `movie.html?id=${movie.id}&type=${currentType}`;
     };
 
     moviesDiv.appendChild(div);
@@ -50,43 +60,33 @@ searchInput.addEventListener("keyup", function () {
   const value = searchInput.value;
 
   if (value.trim() === "") {
-    loadHero();
-loadMovies(getTrending());;
+    loadMovies(getTrending());
   } else {
-    loadMovies(SEARCH + value);
+    loadMovies(getSearch(value));
   }
 });
 
-// Categories
-document.querySelectorAll(".categories button").forEach(btn => {
-  btn.onclick = () => {
-    const genre = btn.getAttribute("data-genre");
-
-    if (genre === "trending") {
-      loadMovies(TRENDING);
-    } else {
-      loadMovies(DISCOVER + genre);
-    }
-  };
-});function loadHero() {
-  fetch(TRENDING)
+// Hero
+function loadHero() {
+  fetch(getTrending())
     .then(res => res.json())
     .then(data => {
       const movie = data.results[Math.floor(Math.random() * data.results.length)];
-
       const hero = document.getElementById("hero");
 
       hero.style.backgroundImage = `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`;
 
       hero.innerHTML = `
         <div class="hero-content">
-          <h1>${movie.title}</h1>
+          <h1>${movie.title || movie.name}</h1>
           <p>${movie.overview.slice(0, 120)}...</p>
-          <button onclick="location.href='movie.html?id=${movie.id}'">▶ Watch</button>
+          <button onclick="location.href='movie.html?id=${movie.id}&type=${currentType}'">▶ Watch</button>
         </div>
       `;
     });
-}// Switch Movie / TV
+}
+
+// Buttons
 document.getElementById("moviesBtn").onclick = () => {
   currentType = "movie";
   loadHero();
@@ -99,7 +99,6 @@ document.getElementById("tvBtn").onclick = () => {
   loadMovies(getTrending());
 };
 
-// Industry filter
 document.querySelectorAll(".industry-filters button").forEach(btn => {
   btn.onclick = () => {
     const lang = btn.getAttribute("data-lang");
