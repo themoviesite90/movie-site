@@ -158,39 +158,45 @@ header h2 {
   color: white;
   border-radius: 5px;
   margin-top: 5px;
-}#hero {
-  height: 300px;
+/* HERO SLIDESHOW */
+#hero {
+  height: 220px; /* smaller so movies are visible below */
   background-size: cover;
   background-position: center;
   position: relative;
   color: white;
   display: flex;
   align-items: flex-end;
+  overflow: hidden;
 }
 
+/* overlay for readability */
 #hero::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, #000, transparent);
+  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
 }
 
 .hero-content {
   position: relative;
-  padding: 20px;
+  padding: 16px;
   z-index: 1;
 }
 
 .hero-content h1 {
   margin: 0;
-  font-size: 28px;
+  font-size: 22px;
 }
 
 .hero-content button {
-  padding: 10px 16px;
+  padding: 8px 14px;
   border: none;
   border-radius: 20px;
-  margin-top: 10px;
+  margin-top: 6px;
+  cursor: pointer;
+}
+
 }.top-filters, .industry-filters {
   display: flex;
   gap: 10px;
