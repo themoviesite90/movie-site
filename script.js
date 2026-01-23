@@ -1,41 +1,11 @@
+// ================= CONSTANTS =================
 const API_KEY = "b9864cdbbdcef170f412314e777c14f5";
 const IMG = "https://image.tmdb.org/t/p/w500";
-
 let currentType = "movie";
 
 const moviesDiv = document.getElementById("movies");
 const searchInput = document.getElementById("search");
-// Search movies as user types
-searchInput.addEventListener("input", function () {
-  const query = searchInput.value.trim();
-
-  if (query === "") {
-    // If search is empty, show trending movies
-    loadMovies(getTrending());
-    return;
-  }
-
-  // Fetch search results from TMDB
-  fetch(`https://api.themoviedb.org/3/search/${currentType}?api_key=${API_KEY}&query=${query}`)
-    .then(res => res.json())
-    .then(data => {
-      showMovies(data.results);
-    })
-    .catch(err => console.log(err));
-});
-
-// ================= URL BUILDERS =================
-function getTrending() {
-  return `https://api.themoviedb.org/3/trending/${currentType}/week?api_key=${API_KEY}`;
-}
-
-function getSearch(q) {
-  return `https://api.themoviedb.org/3/search/${currentType}?api_key=${API_KEY}&query=${q}`;
-}
-
-function getDiscoverByLang(lang) {
-  return `https://api.themoviedb.org/3/discover/${currentType}?api_key=${API_KEY}&with_original_language=${lang}`;
-}
+const searchSuggestions = document.getElementById("search-suggestions"); // live suggestions
 
 // ================= HERO SLIDER =================
 let heroMovies = [];
@@ -43,7 +13,7 @@ let heroIndex = 0;
 let heroTimer = null;
 
 function loadHero() {
-  fetch(getTrending())
+  fetch(`https://api.themoviedb.org/3/trending/${currentType}/week?api_key=${API_KEY}`)
     .then(res => res.json())
     .then(data => {
       heroMovies = data.results.slice(0, 5);
@@ -71,8 +41,12 @@ function showHero() {
   title.innerText = movie.title || movie.name;
   overview.innerText = movie.overview.substring(0, 120) + "...";
 
+  // Save current hero movie to localStorage (for Info button)
+  localStorage.setItem("currentHeroMovieId", movie.id);
+  localStorage.setItem("currentHeroType", currentType);
+
   watchBtn.onclick = () => {
-    window.location.href = `movie.html?id=${movie.id}&type=${currentType}`;
+    window.location.href = `watch.html?id=${movie.id}&type=${currentType}`;
   };
 }
 
@@ -86,7 +60,7 @@ function loadMovies(url) {
   fetch(url)
     .then(res => res.json())
     .then(data => showMovies(data.results))
-    .catch(err => console.log(err));
+    .catch(err => console.log("Movies error:", err));
 }
 
 function showMovies(movies) {
@@ -99,7 +73,7 @@ function showMovies(movies) {
     div.className = "movie";
 
     div.innerHTML = `
-      <img src="${IMG + movie.poster_path}">
+      <img src="${IMG + movie.poster_path}" alt="${movie.title || movie.name}">
       <div class="title">${movie.title || movie.name}</div>
     `;
 
@@ -111,53 +85,100 @@ function showMovies(movies) {
   });
 }
 
-// ================= SEARCH =================
-searchInput.addEventListener("keyup", function () {
-  const value = searchInput.value;
+// ================= SEARCH FUNCTIONALITY =================
+// Debounced live search + suggestions
+let searchTimeout;
 
-  if (value.trim() === "") {
-    loadMovies(getTrending());
-  } else {
-    loadMovies(getSearch(value));
+searchInput.addEventListener("input", e => {
+  const query = e.target.value.trim();
+
+  if (!query) {
+    loadMovies(`https://api.themoviedb.org/3/trending/${currentType}/week?api_key=${API_KEY}`);
+    searchSuggestions.innerHTML = "";
+    searchSuggestions.style.display = "none";
+    return;
   }
+
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    fetch(`https://api.themoviedb.org/3/search/${currentType}?api_key=${API_KEY}&query=${encodeURIComponent(query)}`)
+      .then(res => res.json())
+      .then(data => {
+        showMovies(data.results);
+        showSearchSuggestions(data.results);
+      });
+  }, 300); // 300ms debounce
 });
 
-// ================= BUTTONS =================
+// ================= SEARCH SUGGESTIONS =================
+function showSearchSuggestions(results) {
+  searchSuggestions.innerHTML = "";
+  if (!results || results.length === 0) {
+    searchSuggestions.style.display = "none";
+    return;
+  }
+
+  results.slice(0, 5).forEach(movie => {
+    const div = document.createElement("div");
+    div.className = "suggestion";
+    div.innerHTML = `
+      <img src="${IMG + movie.poster_path}" alt="${movie.title || movie.name}">
+      <span>${movie.title || movie.name}</span>
+    `;
+    div.onclick = () => {
+      window.location.href = `movie.html?id=${movie.id}&type=${currentType}`;
+    };
+    searchSuggestions.appendChild(div);
+  });
+
+  searchSuggestions.style.display = "block";
+}
+
+// ================= FILTER BUTTONS =================
 document.getElementById("moviesBtn").onclick = () => {
   currentType = "movie";
+  toggleActiveButton("moviesBtn", ".filter-btn");
   loadHero();
-  loadMovies(getTrending());
+  loadMovies(`https://api.themoviedb.org/3/trending/${currentType}/week?api_key=${API_KEY}`);
 };
 
 document.getElementById("tvBtn").onclick = () => {
   currentType = "tv";
+  toggleActiveButton("tvBtn", ".filter-btn");
   loadHero();
-  loadMovies(getTrending());
+  loadMovies(`https://api.themoviedb.org/3/trending/${currentType}/week?api_key=${API_KEY}`);
 };
 
 document.querySelectorAll(".industry-filters button").forEach(btn => {
   btn.onclick = () => {
     const lang = btn.getAttribute("data-lang");
-    loadMovies(getDiscoverByLang(lang));
+    loadMovies(`https://api.themoviedb.org/3/discover/${currentType}?api_key=${API_KEY}&with_original_language=${lang}`);
+    toggleActiveButton(btn, ".industry-btn");
   };
 });
 
-// ================= START =================
-loadHero();
-loadMovies(getTrending());
-// Fixed search functionality
-searchInput.addEventListener('input', function(e) {
-  const query = e.target.value.trim();
-  
-  if (query.length === 0) {
-    loadMovies(getTrending());
-    return;
-  }
-  
-  // Debounce search
-  clearTimeout(window.searchTimeout);
-  window.searchTimeout = setTimeout(() => {
-    const url = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(query)}`;
+document.querySelectorAll(".genre-filters button").forEach(btn => {
+  btn.onclick = () => {
+    const genre = btn.getAttribute("data-genre");
+    const url = genre === "trending"
+      ? `https://api.themoviedb.org/3/trending/${currentType}/week?api_key=${API_KEY}`
+      : `https://api.themoviedb.org/3/discover/${currentType}?api_key=${API_KEY}&with_genres=${genre}`;
     loadMovies(url);
-  }, 500);
+    toggleActiveButton(btn, ".genre-btn");
+  };
 });
+
+// ================= HELPER =================
+function toggleActiveButton(activeBtn, selector) {
+  if (typeof activeBtn === "string") {
+    document.querySelectorAll(selector).forEach(btn => btn.classList.remove("active"));
+    document.getElementById(activeBtn).classList.add("active");
+  } else {
+    document.querySelectorAll(selector).forEach(btn => btn.classList.remove("active"));
+    activeBtn.classList.add("active");
+  }
+}
+
+// ================= INITIAL LOAD =================
+loadHero();
+loadMovies(`https://api.themoviedb.org/3/trending/${currentType}/week?api_key=${API_KEY}`);
