@@ -62,4 +62,22 @@ document.querySelectorAll(".categories button").forEach(btn => {
       loadMovies(DISCOVER + genre);
     }
   };
-});
+});function loadHero() {
+  fetch(TRENDING)
+    .then(res => res.json())
+    .then(data => {
+      const movie = data.results[Math.floor(Math.random() * data.results.length)];
+
+      const hero = document.getElementById("hero");
+
+      hero.style.backgroundImage = `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`;
+
+      hero.innerHTML = `
+        <div class="hero-content">
+          <h1>${movie.title}</h1>
+          <p>${movie.overview.slice(0, 120)}...</p>
+          <button onclick="location.href='movie.html?id=${movie.id}'">▶ Watch</button>
+        </div>
+      `;
+    });
+}
