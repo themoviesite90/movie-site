@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sign Up - CineBuzz</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h2 style="color:white;text-align:center">Create CineBuzz Account</h2>
+
+<div style="padding:20px">
+  <input id="email" placeholder="Email"><br><br>
+  <input id="password" type="password" placeholder="Password"><br><br>
+
+  <button onclick="signup()">Create Account</button>
+
+  <p style="color:white">Already have account? <a href="login.html">Login</a></p>
+</div>
+
+<script type="module" src="auth.js"></script>
+<script type="module">
+  const email = document.getElementById("email");
+  const password = document.getElementById("password");
+
+  window.signup = () => {
+    createUserWithEmailAndPassword(auth, email.value, password.value)
+      .then(() => location.href = "index.html")
+      .catch(err => alert(err.message));
+  };
+</script>
+
+</body>
+</html>
