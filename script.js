@@ -5,6 +5,24 @@ let currentType = "movie";
 
 const moviesDiv = document.getElementById("movies");
 const searchInput = document.getElementById("search");
+// Search movies as user types
+searchInput.addEventListener("input", function () {
+  const query = searchInput.value.trim();
+
+  if (query === "") {
+    // If search is empty, show trending movies
+    loadMovies(getTrending());
+    return;
+  }
+
+  // Fetch search results from TMDB
+  fetch(`https://api.themoviedb.org/3/search/${currentType}?api_key=${API_KEY}&query=${query}`)
+    .then(res => res.json())
+    .then(data => {
+      showMovies(data.results);
+    })
+    .catch(err => console.log(err));
+});
 
 // ================= URL BUILDERS =================
 function getTrending() {
