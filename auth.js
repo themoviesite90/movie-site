@@ -10,14 +10,16 @@ import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 
-// 🔴 PASTE YOUR FIREBASE CONFIG HERE
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "YOUR_KEY",
-  authDomain: "YOUR_DOMAIN",
-  projectId: "YOUR_ID",
-  storageBucket: "YOUR_BUCKET",
-  messagingSenderId: "YOUR_SENDER",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyAX61nCMRQgBBgR7_z1DktSvJbGh7WUcrE",
+  authDomain: "cinebuzz-98ccb.firebaseapp.com",
+  projectId: "cinebuzz-98ccb",
+  storageBucket: "cinebuzz-98ccb.firebasestorage.app",
+  messagingSenderId: "73436323035",
+  appId: "1:73436323035:web:3bdec389d7ef51e7db00fe",
+  measurementId: "G-1JZ0ZM34M5"
+};
 };
 
 // Init
