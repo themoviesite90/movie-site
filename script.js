@@ -86,4 +86,23 @@ document.querySelectorAll(".categories button").forEach(btn => {
         </div>
       `;
     });
-}
+}// Switch Movie / TV
+document.getElementById("moviesBtn").onclick = () => {
+  currentType = "movie";
+  loadHero();
+  loadMovies(getTrending());
+};
+
+document.getElementById("tvBtn").onclick = () => {
+  currentType = "tv";
+  loadHero();
+  loadMovies(getTrending());
+};
+
+// Industry filter
+document.querySelectorAll(".industry-filters button").forEach(btn => {
+  btn.onclick = () => {
+    const lang = btn.getAttribute("data-lang");
+    loadMovies(getDiscoverByLang(lang));
+  };
+});
