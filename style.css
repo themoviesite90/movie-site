@@ -232,4 +232,16 @@ header h2 {
   position: relative;
   padding: 15px;
   z-index: 2;
+}#detailsHero {
+  height: 260px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+#detailsHero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, #020617, transparent);
 }
