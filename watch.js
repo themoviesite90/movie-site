@@ -1,44 +1,54 @@
-import { auth } from "./auth.js";
-
 const API_KEY = "b9864cdbbdcef170f412314e777c14f5";
-const IMG = "https://image.tmdb.org/t/p/w500";
 
-// Get movie id and type from URL
 const params = new URLSearchParams(window.location.search);
-const movieId = params.get("id");
+const id = params.get("id");
 const type = params.get("type") || "movie";
 
-const titleEl = document.getElementById("movieTitle");
-const overviewEl = document.getElementById("movieOverview");
-const iframe = document.getElementById("videoIframe");
+const titleEl = document.getElementById("watchTitle");
+const overviewEl = document.getElementById("watchOverview");
+const playerDiv = document.getElementById("player");
 
-// Fetch movie details
-fetch(`https://api.themoviedb.org/3/${type}/${movieId}?api_key=${API_KEY}&language=en-US`)
-  .then(res => res.json())
-  .then(data => {
-    titleEl.innerText = data.title || data.name;
-    overviewEl.innerText = data.overview;
+async function loadMovie() {
+  const res = await fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}`);
+  const movie = await res.json();
 
-    // Fetch trailer
-    fetch(`https://api.themoviedb.org/3/${type}/${movieId}/videos?api_key=${API_KEY}&language=en-US`)
-      .then(res => res.json())
-      .then(videoData => {
-        const trailer = videoData.results.find(v => v.type === "Trailer" && v.site === "YouTube");
+  titleEl.innerText = movie.title || movie.name;
+  overviewEl.innerText = movie.overview;
 
-        if (trailer) {
-          iframe.src = `https://www.youtube.com/embed/${trailer.key}?autoplay=1`;
-        } else {
-          iframe.remove();
-          const fallback = document.createElement("p");
-          fallback.innerText = "Trailer not available for this movie.";
-          overviewEl.after(fallback);
-        }
-      });
-  })
-  .catch(err => console.log("Watch page error:", err));
+  // Save to recently watched
+  saveRecentlyWatched(movie);
 
-// Optional: auth check
-auth.onAuthStateChanged(user => {
-  if (!user) return;
-  // Could save watch history here
-});
+  // Load YouTube trailer
+  const videoRes = await fetch(`https://api.themoviedb.org/3/${type}/${id}/videos?api_key=${API_KEY}`);
+  const videoData = await videoRes.json();
+
+  const trailer = videoData.results.find(v => v.site === "YouTube");
+
+  if (trailer) {
+    playerDiv.innerHTML = `
+      <iframe 
+        width="100%" height="500"
+        src="https://www.youtube.com/embed/${trailer.key}"
+        frameborder="0" 
+        allowfullscreen>
+      </iframe>
+    `;
+  } else {
+    playerDiv.innerHTML = "<p>No trailer found.</p>";
+  }
+}
+
+function saveRecentlyWatched(movie) {
+  let list = JSON.parse(localStorage.getItem("recentlyWatched")) || [];
+  list = list.filter(m => m.id !== movie.id);
+  list.unshift({
+    id: movie.id,
+    type: type,
+    title: movie.title || movie.name,
+    poster: movie.poster_path
+  });
+  list = list.slice(0, 20);
+  localStorage.setItem("recentlyWatched", JSON.stringify(list));
+}
+
+loadMovie();
