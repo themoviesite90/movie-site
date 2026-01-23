@@ -1,0 +1,31 @@
+<!-- watch.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Watch - CineBuzz</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <a href="javascript:history.back()" class="back">← Back</a>
+  <h2>🎬 CineBuzz</h2>
+</div>
+
+<div class="player-container">
+  <div id="player"></div>
+  <div class="player-info">
+    <h2 id="watchTitle">Loading...</h2>
+    <p id="watchOverview"></p>
+    <div class="player-controls">
+      <button onclick="togglePlay()">⏯️ Play/Pause</button>
+      <button onclick="toggleFullscreen()">⛶ Fullscreen</button>
+      <button onclick="toggleMute()">🔇 Mute</button>
+    </div>
+  </div>
+</div>
+
+<script src="watch.js"></script>
+</body>
+</html>
