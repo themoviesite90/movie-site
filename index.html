@@ -1,86 +1,102 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>CineBuzz</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CineBuzz - Stream Movies & TV Shows</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎬</text></svg>">
 </head>
 <body>
+  <div class="container">
+    <!-- Header -->
+    <header class="main-header">
+      <div class="logo">
+        <h1>🎬 CineBuzz</h1>
+      </div>
+      <div class="search-bar">
+        <input type="text" id="search" placeholder="Search movies, TV shows...">
+      </div>
+      <div class="user-nav">
+        <a href="favorites.html" class="nav-link">❤️ My List</a>
+        <a href="login.html" id="loginBtn" class="nav-link">Login</a>
+        <button id="logoutBtn" class="btn-logout" style="display:none">Logout</button>
+      </div>
+    </header>
 
-<!-- HEADER -->
-<header>
-  <h2>🎬 CineBuzz</h2>
-  <input id="search" placeholder="Search movies...">
-  <a href="favorites.html" style="color:white">❤️ My List</a>
-  <a id="loginBtn" href="login.html" style="color:white">Login</a>
-  <button id="logoutBtn" style="display:none">Logout</button>
-</header>
+    <!-- Main Content -->
+    <main>
+      <!-- Hero Section -->
+      <section id="hero" class="hero-section">
+        <div class="hero-content">
+          <h2 id="heroTitle">Loading the best entertainment...</h2>
+          <p id="heroOverview"></p>
+          <div class="hero-buttons">
+            <button id="heroWatch" class="btn-primary">▶ Watch Now</button>
+            <button id="heroInfo" class="btn-secondary">ℹ️ More Info</button>
+          </div>
+        </div>
+      </section>
 
-<!-- TOP FILTERS -->
-<div class="top-filters">
-  <button id="moviesBtn">🎬 Movies</button>
-  <button id="tvBtn">📺 TV Series</button>
-</div>
+      <!-- Content Filters -->
+      <section class="content-filters">
+        <div class="type-filters">
+          <button id="moviesBtn" class="filter-btn active">🎬 Movies</button>
+          <button id="tvBtn" class="filter-btn">📺 TV Series</button>
+        </div>
+        
+        <div class="industry-filters">
+          <button data-lang="en" class="industry-btn">🌍 Hollywood</button>
+          <button data-lang="hi" class="industry-btn">🇮🇳 Bollywood</button>
+          <button data-lang="te" class="industry-btn">🇮🇳 Tollywood</button>
+          <button data-lang="ko" class="industry-btn">🇰🇷 Korean</button>
+          <button data-lang="ja" class="industry-btn">🇯🇵 Japanese</button>
+        </div>
 
-<!-- INDUSTRY FILTERS -->
-<div class="industry-filters">
-  <button data-lang="en">🌍 Hollywood</button>
-  <button data-lang="hi">🇮🇳 Bollywood</button>
-  <button data-lang="te">🇮🇳 Tollywood</button>
-  <button data-lang="bn">🇧🇩 Dhallywood</button>
-  <button data-lang="ko">🇰🇷 Korean</button>
-  <button data-lang="ja">🇯🇵 Anime</button>
-</div>
+        <div class="genre-filters">
+          <button data-genre="trending" class="genre-btn active">🔥 Trending</button>
+          <button data-genre="28" class="genre-btn">🎬 Action</button>
+          <button data-genre="35" class="genre-btn">😂 Comedy</button>
+          <button data-genre="27" class="genre-btn">👻 Horror</button>
+          <button data-genre="878" class="genre-btn">🚀 Sci-Fi</button>
+          <button data-genre="10749" class="genre-btn">❤️ Romance</button>
+        </div>
+      </section>
 
-<!-- HERO SLIDESHOW -->
-<div id="hero">
-  <div class="hero-content">
-    <h1 id="heroTitle">Loading...</h1>
-    <p id="heroOverview"></p>
-    <button id="heroWatch">▶ Watch</button>
+      <!-- Movies Grid -->
+      <section class="movies-section">
+        <h3 class="section-title">Popular Now</h3>
+        <div id="movies" class="movies-grid"></div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <p>© 2024 CineBuzz. All movie data from TMDB.</p>
+    </footer>
   </div>
-</div>
 
-<!-- CATEGORIES -->
-<div class="categories">
-  <button data-genre="trending">🔥 Trending</button>
-  <button data-genre="28">🎬 Action</button>
-  <button data-genre="27">👻 Horror</button>
-  <button data-genre="35">😂 Comedy</button>
-  <button data-genre="878">🚀 Sci-Fi</button>
-  <button data-genre="10749">❤️ Romance</button>
-</div>
-
-<!-- MOVIES GRID -->
-<div id="movies"></div>
-
-<!-- SCRIPTS -->
-<script src="script.js"></script>
-<script type="module" src="auth.js"></script>
-
-<script type="module">
-  import { auth } from "./auth.js";
-  import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-  const loginBtn = document.getElementById("loginBtn");
-  const logoutBtn = document.getElementById("logoutBtn");
-
-  onAuthStateChanged(auth, user => {
-    if (user) {
-      loginBtn.innerText = user.email;
-      loginBtn.href = "#";
-      logoutBtn.style.display = "inline-block";
-    } else {
-      loginBtn.innerText = "Login";
-      loginBtn.href = "login.html";
-      logoutBtn.style.display = "none";
-    }
-  });
-
-  logoutBtn.onclick = () => {
-    signOut(auth);
-  };
-</script>
-
+  <!-- Scripts -->
+  <script src="auth.js" type="module"></script>
+  <script src="script.js" defer></script>
+  <script>
+    // Simple auth state check
+    document.addEventListener('DOMContentLoaded', function() {
+      const user = localStorage.getItem('cinebuzz_user');
+      const loginBtn = document.getElementById('loginBtn');
+      const logoutBtn = document.getElementById('logoutBtn');
+      
+      if (user) {
+        loginBtn.textContent = JSON.parse(user).email;
+        loginBtn.href = '#';
+        logoutBtn.style.display = 'inline-block';
+        
+        logoutBtn.addEventListener('click', function() {
+          localStorage.removeItem('cinebuzz_user');
+          window.location.reload();
+        });
+      }
+    });
+  </script>
 </body>
 </html>
