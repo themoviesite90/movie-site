@@ -60,6 +60,7 @@ function nextHeroSlide() {
 }
 
 loadMovies(getTrending());
+loadHero();
 
 // Fetch
 function loadMovies(url) {
