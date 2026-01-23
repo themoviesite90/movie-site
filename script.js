@@ -141,4 +141,36 @@ document.querySelectorAll(".industry-filters button").forEach(btn => {
     const lang = btn.getAttribute("data-lang");
     loadMovies(getDiscoverByLang(lang));
   };
-});
+});let heroMovies = [];
+let heroIndex = 0;
+
+function loadHero() {
+  fetch(getTrending())
+    .then(res => res.json())
+    .then(data => {
+      heroMovies = data.results.slice(0, 5); // take 5 movies
+      showHero();
+      setInterval(nextHero, 5000); // change every 5 seconds
+    });
+}
+
+function showHero() {
+  const movie = heroMovies[heroIndex];
+  if (!movie) return;
+
+  document.getElementById("hero").style.backgroundImage =
+    `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`;
+
+  document.getElementById("heroTitle").innerText = movie.title || movie.name;
+  document.getElementById("heroOverview").innerText =
+    movie.overview.substring(0, 100) + "...";
+
+  document.getElementById("heroWatch").onclick = () => {
+    window.location.href = `movie.html?id=${movie.id}`;
+  };
+}
+
+function nextHero() {
+  heroIndex = (heroIndex + 1) % heroMovies.length;
+  showHero();
+}
