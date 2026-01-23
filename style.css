@@ -191,4 +191,19 @@ header h2 {
   border: none;
   border-radius: 20px;
   margin-top: 10px;
+}.top-filters, .industry-filters {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  overflow-x: auto;
+  background: #050b18;
+}
+
+.top-filters button, .industry-filters button {
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: none;
+  background: #1e293b;
+  color: white;
+  white-space: nowrap;
 }
