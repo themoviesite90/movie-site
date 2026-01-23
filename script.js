@@ -1,5 +1,4 @@
 const API_KEY = "b9864cdbbdcef170f412314e777c14f5";
-
 const IMG = "https://image.tmdb.org/t/p/w500";
 
 let currentType = "movie";
@@ -7,7 +6,7 @@ let currentType = "movie";
 const moviesDiv = document.getElementById("movies");
 const searchInput = document.getElementById("search");
 
-// URLs
+// ================= URL BUILDERS =================
 function getTrending() {
   return `https://api.themoviedb.org/3/trending/${currentType}/week?api_key=${API_KEY}`;
 }
@@ -20,49 +19,51 @@ function getDiscoverByLang(lang) {
   return `https://api.themoviedb.org/3/discover/${currentType}?api_key=${API_KEY}&with_original_language=${lang}`;
 }
 
-// Load
-loadHero();let heroMovies = [];
-let currentHero = 0;
-let heroInterval;
+// ================= HERO SLIDER =================
+let heroMovies = [];
+let heroIndex = 0;
+let heroTimer = null;
 
 function loadHero() {
   fetch(getTrending())
     .then(res => res.json())
     .then(data => {
-      heroMovies = data.results.slice(0,5); // first 5 movies
-      currentHero = 0;
-      showHeroSlide();
-      if(heroInterval) clearInterval(heroInterval);
-      heroInterval = setInterval(nextHeroSlide, 5000); // change every 5 seconds
-    });
+      heroMovies = data.results.slice(0, 5);
+      heroIndex = 0;
+      showHero();
+
+      if (heroTimer) clearInterval(heroTimer);
+      heroTimer = setInterval(nextHero, 5000);
+    })
+    .catch(err => console.log("Hero error:", err));
 }
 
-function showHeroSlide() {
-  const movie = heroMovies[currentHero];
-  if(!movie) return;
+function showHero() {
+  const movie = heroMovies[heroIndex];
+  if (!movie) return;
 
   const hero = document.getElementById("hero");
   const title = document.getElementById("heroTitle");
   const overview = document.getElementById("heroOverview");
   const watchBtn = document.getElementById("heroWatch");
 
-  hero.style.backgroundImage = `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`;
+  hero.style.backgroundImage =
+    `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`;
+
   title.innerText = movie.title || movie.name;
-  overview.innerText = movie.overview.slice(0,120) + "...";
+  overview.innerText = movie.overview.substring(0, 120) + "...";
+
   watchBtn.onclick = () => {
     window.location.href = `movie.html?id=${movie.id}&type=${currentType}`;
   };
 }
 
-function nextHeroSlide() {
-  currentHero = (currentHero + 1) % heroMovies.length;
-  showHeroSlide();
+function nextHero() {
+  heroIndex = (heroIndex + 1) % heroMovies.length;
+  showHero();
 }
 
-loadMovies(getTrending());
-loadHero();
-
-// Fetch
+// ================= MOVIES GRID =================
 function loadMovies(url) {
   fetch(url)
     .then(res => res.json())
@@ -70,7 +71,6 @@ function loadMovies(url) {
     .catch(err => console.log(err));
 }
 
-// Show
 function showMovies(movies) {
   moviesDiv.innerHTML = "";
 
@@ -93,7 +93,7 @@ function showMovies(movies) {
   });
 }
 
-// Search
+// ================= SEARCH =================
 searchInput.addEventListener("keyup", function () {
   const value = searchInput.value;
 
@@ -104,27 +104,7 @@ searchInput.addEventListener("keyup", function () {
   }
 });
 
-// Hero
-function loadHero() {
-  fetch(getTrending())
-    .then(res => res.json())
-    .then(data => {
-      const movie = data.results[Math.floor(Math.random() * data.results.length)];
-      const hero = document.getElementById("hero");
-
-      hero.style.backgroundImage = `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`;
-
-      hero.innerHTML = `
-        <div class="hero-content">
-          <h1>${movie.title || movie.name}</h1>
-          <p>${movie.overview.slice(0, 120)}...</p>
-          <button onclick="location.href='movie.html?id=${movie.id}&type=${currentType}'">▶ Watch</button>
-        </div>
-      `;
-    });
-}
-
-// Buttons
+// ================= BUTTONS =================
 document.getElementById("moviesBtn").onclick = () => {
   currentType = "movie";
   loadHero();
@@ -142,36 +122,8 @@ document.querySelectorAll(".industry-filters button").forEach(btn => {
     const lang = btn.getAttribute("data-lang");
     loadMovies(getDiscoverByLang(lang));
   };
-});let heroMovies = [];
-let heroIndex = 0;
+});
 
-function loadHero() {
-  fetch(getTrending())
-    .then(res => res.json())
-    .then(data => {
-      heroMovies = data.results.slice(0, 5); // take 5 movies
-      showHero();
-      setInterval(nextHero, 5000); // change every 5 seconds
-    });
-}
-
-function showHero() {
-  const movie = heroMovies[heroIndex];
-  if (!movie) return;
-
-  document.getElementById("hero").style.backgroundImage =
-    `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`;
-
-  document.getElementById("heroTitle").innerText = movie.title || movie.name;
-  document.getElementById("heroOverview").innerText =
-    movie.overview.substring(0, 100) + "...";
-
-  document.getElementById("heroWatch").onclick = () => {
-    window.location.href = `movie.html?id=${movie.id}`;
-  };
-}
-
-function nextHero() {
-  heroIndex = (heroIndex + 1) % heroMovies.length;
-  showHero();
-}
+// ================= START =================
+loadHero();
+loadMovies(getTrending());
