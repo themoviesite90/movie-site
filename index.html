@@ -41,5 +41,27 @@
 
 <div id="movies"></div>
 
-<script src="script.js"></script>
+<script src="script.js"></script><script type="module" src="auth.js"></script>
+
+<script type="module">
+  const loginBtn = document.getElementById("loginBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      loginBtn.innerText = user.email;
+      loginBtn.href = "#";
+      logoutBtn.style.display = "inline-block";
+    } else {
+      loginBtn.innerText = "Login";
+      loginBtn.href = "login.html";
+      logoutBtn.style.display = "none";
+    }
+  });
+
+  logoutBtn.onclick = () => {
+    signOut(auth);
+  };
+</script>
+
 </body>
