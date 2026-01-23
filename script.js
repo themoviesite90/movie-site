@@ -50,7 +50,8 @@ searchInput.addEventListener("keyup", function () {
   const value = searchInput.value;
 
   if (value.trim() === "") {
-    loadMovies(TRENDING);
+    loadHero();
+loadMovies(getTrending());;
   } else {
     loadMovies(SEARCH + value);
   }
