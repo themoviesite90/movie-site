@@ -21,7 +21,44 @@ function getDiscoverByLang(lang) {
 }
 
 // Load
-loadHero();
+loadHero();let heroMovies = [];
+let currentHero = 0;
+let heroInterval;
+
+function loadHero() {
+  fetch(getTrending())
+    .then(res => res.json())
+    .then(data => {
+      heroMovies = data.results.slice(0,5); // first 5 movies
+      currentHero = 0;
+      showHeroSlide();
+      if(heroInterval) clearInterval(heroInterval);
+      heroInterval = setInterval(nextHeroSlide, 5000); // change every 5 seconds
+    });
+}
+
+function showHeroSlide() {
+  const movie = heroMovies[currentHero];
+  if(!movie) return;
+
+  const hero = document.getElementById("hero");
+  const title = document.getElementById("heroTitle");
+  const overview = document.getElementById("heroOverview");
+  const watchBtn = document.getElementById("heroWatch");
+
+  hero.style.backgroundImage = `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`;
+  title.innerText = movie.title || movie.name;
+  overview.innerText = movie.overview.slice(0,120) + "...";
+  watchBtn.onclick = () => {
+    window.location.href = `movie.html?id=${movie.id}&type=${currentType}`;
+  };
+}
+
+function nextHeroSlide() {
+  currentHero = (currentHero + 1) % heroMovies.length;
+  showHeroSlide();
+}
+
 loadMovies(getTrending());
 
 // Fetch
