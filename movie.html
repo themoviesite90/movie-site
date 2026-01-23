@@ -1,37 +1,46 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Movie Details</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie Details - CineBuzz</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <header class="main-header">
+    <div class="logo">
+      <h1>🎬 CineBuzz</h1>
+    </div>
+    <div class="user-nav">
+      <a href="favorites.html" class="nav-link">❤️ My List</a>
+      <a href="login.html" id="loginBtn" class="nav-link">Login</a>
+      <button id="logoutBtn" class="btn-logout" style="display:none">Logout</button>
+    </div>
+  </header>
 
-<div class="topbar">
-  <a href="index.html" class="back">← Back</a>
-  <h2>CineBuzz</h2>
-</div>
+  <main class="movie-details-container">
+    <div class="movie-poster">
+      <img id="moviePoster" src="" alt="Poster">
+    </div>
+    <div class="movie-info">
+      <h2 id="movieTitle">Loading...</h2>
+      <p id="movieOverview"></p>
+      <p><strong>Rating:</strong> <span id="movieRating"></span></p>
+      <p><strong>Genres:</strong> <span id="movieGenres"></span></p>
+      <button id="watchTrailerBtn" class="btn-primary">▶ Watch Trailer</button>
+      <button id="favBtn" class="fav-btn">❤️ Add to My List</button>
+    </div>
+  </main>
 
-<div id="detailsHero"></div>
-
-<div class="details-container">
-  <div class="details-poster">
-    <img id="poster" src="">
-  </div>
-  <div class="details-info">
-    <h1 id="title"></h1>
-    <p id="meta"></p>
-    <p class="rating" id="rating"></p>
-    <p class="overview" id="overview"></p>
-
-    <div class="buttons">
-      <button id="trailerBtn">▶ Play Trailer</button>
-      <button id="favBtn">❤️ Add to My List</button>
+  <!-- Trailer Modal -->
+  <div id="trailerModal" class="modal">
+    <div class="modal-content">
+      <span id="closeTrailer" class="close">&times;</span>
+      <iframe id="trailerIframe" width="100%" height="400px" frameborder="0" allowfullscreen></iframe>
     </div>
   </div>
-</div>
 
-<script src="movie.js"></script>
-
+  <script type="module" src="auth.js"></script>
+  <script type="module" src="movie.js"></script>
 </body>
 </html>
