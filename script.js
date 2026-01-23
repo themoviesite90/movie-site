@@ -5,7 +5,7 @@ let currentType = "movie";
 
 const moviesDiv = document.getElementById("movies");
 const searchInput = document.getElementById("search");
-const searchSuggestions = document.getElementById("search-suggestions"); // live suggestions
+const searchSuggestions = document.getElementById("search-suggestions");
 
 // ================= HERO SLIDER =================
 let heroMovies = [];
@@ -27,36 +27,6 @@ function loadHero() {
 }
 
 function showHero() {
-  div.innerHTML = `
-  <img src="${IMG + movie.poster_path}" alt="${movie.title || movie.name}">
-  <div class="title">${movie.title || movie.name}</div>
-  <button class="fav-btn" id="fav-${movie.id}">❤️ Add to My List</button>
-`;
-
-const favBtn = div.querySelector(`#fav-${movie.id}`);
-favBtn.onclick = async (e) => {
-  e.stopPropagation(); // Prevent movie click
-  const user = auth.currentUser;
-  if (!user) {
-    alert("Please login to add to favorites!");
-    return;
-  }
-  
-  const docRef = doc(db, "users", user.uid);
-  const docSnap = await getDoc(docRef);
-
-  if (docSnap.exists() && docSnap.data().favorites?.includes(movie.id)) {
-    // Remove from favorites
-    await updateDoc(docRef, {
-      favorites: arrayRemove(movie.id)
-    });
-    favBtn.innerText = "❤️ Add to My List";
-  } else {
-    // Add to favorites
-    await setDoc(docRef, { favorites: arrayUnion(movie.id) }, { merge: true });
-    favBtn.innerText = "💛 Remove from My List";
-  }
-};
   const movie = heroMovies[heroIndex];
   if (!movie) return;
 
@@ -71,12 +41,8 @@ favBtn.onclick = async (e) => {
   title.innerText = movie.title || movie.name;
   overview.innerText = movie.overview.substring(0, 120) + "...";
 
-  // Save current hero movie to localStorage (for Info button)
-  localStorage.setItem("currentHeroMovieId", movie.id);
-  localStorage.setItem("currentHeroType", currentType);
-
   watchBtn.onclick = () => {
-    window.location.href = `watch.html?id=${movie.id}&type=${currentType}`;
+    window.location.href = `movie.html?id=${movie.id}&type=${currentType}`;
   };
 }
 
@@ -94,36 +60,6 @@ function loadMovies(url) {
 }
 
 function showMovies(movies) {
-  div.innerHTML = `
-  <img src="${IMG + movie.poster_path}" alt="${movie.title || movie.name}">
-  <div class="title">${movie.title || movie.name}</div>
-  <button class="fav-btn" id="fav-${movie.id}">❤️ Add to My List</button>
-`;
-
-const favBtn = div.querySelector(`#fav-${movie.id}`);
-favBtn.onclick = async (e) => {
-  e.stopPropagation(); // Prevent movie click
-  const user = auth.currentUser;
-  if (!user) {
-    alert("Please login to add to favorites!");
-    return;
-  }
-  
-  const docRef = doc(db, "users", user.uid);
-  const docSnap = await getDoc(docRef);
-
-  if (docSnap.exists() && docSnap.data().favorites?.includes(movie.id)) {
-    // Remove from favorites
-    await updateDoc(docRef, {
-      favorites: arrayRemove(movie.id)
-    });
-    favBtn.innerText = "❤️ Add to My List";
-  } else {
-    // Add to favorites
-    await setDoc(docRef, { favorites: arrayUnion(movie.id) }, { merge: true });
-    favBtn.innerText = "💛 Remove from My List";
-  }
-};
   moviesDiv.innerHTML = "";
 
   movies.forEach(movie => {
@@ -135,18 +71,43 @@ favBtn.onclick = async (e) => {
     div.innerHTML = `
       <img src="${IMG + movie.poster_path}" alt="${movie.title || movie.name}">
       <div class="title">${movie.title || movie.name}</div>
+      <button class="fav-btn" id="fav-${movie.id}">❤️ Add to My List</button>
     `;
 
-    div.onclick = () => {
-      window.location.href = `movie.html?id=${movie.id}&type=${currentType}`;
+    // Click to go to movie page
+    div.onclick = (e) => {
+      if (!e.target.classList.contains("fav-btn")) {
+        window.location.href = `movie.html?id=${movie.id}&type=${currentType}`;
+      }
+    };
+
+    // Favorite button logic
+    const favBtn = div.querySelector(`#fav-${movie.id}`);
+    favBtn.onclick = async (e) => {
+      e.stopPropagation();
+      const user = auth.currentUser;
+      if (!user) {
+        alert("Please login to add to favorites!");
+        return;
+      }
+
+      const docRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists() && docSnap.data().favorites?.includes(movie.id)) {
+        await updateDoc(docRef, { favorites: arrayRemove(movie.id) });
+        favBtn.innerText = "❤️ Add to My List";
+      } else {
+        await setDoc(docRef, { favorites: arrayUnion(movie.id) }, { merge: true });
+        favBtn.innerText = "💛 Remove from My List";
+      }
     };
 
     moviesDiv.appendChild(div);
   });
 }
 
-// ================= SEARCH FUNCTIONALITY =================
-// Debounced live search + suggestions
+// ================= SEARCH =================
 let searchTimeout;
 
 searchInput.addEventListener("input", e => {
@@ -167,10 +128,9 @@ searchInput.addEventListener("input", e => {
         showMovies(data.results);
         showSearchSuggestions(data.results);
       });
-  }, 300); // 300ms debounce
+  }, 300);
 });
 
-// ================= SEARCH SUGGESTIONS =================
 function showSearchSuggestions(results) {
   searchSuggestions.innerHTML = "";
   if (!results || results.length === 0) {
