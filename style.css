@@ -212,4 +212,24 @@ header h2 {
   background: #1e293b;
   color: white;
   white-space: nowrap;
+}#hero {
+  height: 220px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+}
+
+#hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, black, transparent);
+}
+
+.hero-content {
+  position: relative;
+  padding: 15px;
+  z-index: 2;
 }
