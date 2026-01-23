@@ -15,7 +15,8 @@
         <h1>🎬 CineBuzz</h1>
       </div>
       <div class="search-bar">
-        <input type="text" id="search" placeholder="Search movies, TV shows...">
+        <input type="text" id="search" placeholder="Search movies, TV shows..." autocomplete="off">
+        <div id="search-suggestions" class="search-suggestions"></div> <!-- Live suggestions dropdown -->
       </div>
       <div class="user-nav">
         <a href="favorites.html" class="nav-link">❤️ My List</a>
@@ -28,6 +29,7 @@
     <main>
       <!-- Hero Section -->
       <section id="hero" class="hero-section">
+        <div class="hero-overlay"></div> <!-- subtle dark overlay -->
         <div class="hero-content">
           <h2 id="heroTitle">Loading the best entertainment...</h2>
           <p id="heroOverview"></p>
@@ -51,6 +53,7 @@
           <button data-lang="te" class="industry-btn">🇮🇳 Tollywood</button>
           <button data-lang="ko" class="industry-btn">🇰🇷 Korean</button>
           <button data-lang="ja" class="industry-btn">🇯🇵 Japanese</button>
+          <button data-lang="bn" class="industry-btn">🇧🇩 Dhallywood</button>
         </div>
 
         <div class="genre-filters">
@@ -77,25 +80,34 @@
   </div>
 
   <!-- Scripts -->
-  <script src="auth.js" type="module"></script>
+  <script type="module" src="auth.js"></script>
   <script src="script.js" defer></script>
   <script>
-    // Simple auth state check
+    // Auth state (localStorage fallback)
     document.addEventListener('DOMContentLoaded', function() {
       const user = localStorage.getItem('cinebuzz_user');
       const loginBtn = document.getElementById('loginBtn');
       const logoutBtn = document.getElementById('logoutBtn');
       
-      if (user) {
+      if(user) {
         loginBtn.textContent = JSON.parse(user).email;
         loginBtn.href = '#';
         logoutBtn.style.display = 'inline-block';
-        
         logoutBtn.addEventListener('click', function() {
           localStorage.removeItem('cinebuzz_user');
           window.location.reload();
         });
       }
+
+      // Hero info button goes to movie.html (details page)
+      const heroInfo = document.getElementById('heroInfo');
+      heroInfo.addEventListener('click', function() {
+        const currentHeroMovieId = window.localStorage.getItem('currentHeroMovieId');
+        const currentHeroType = window.localStorage.getItem('currentHeroType') || 'movie';
+        if(currentHeroMovieId) {
+          window.location.href = `movie.html?id=${currentHeroMovieId}&type=${currentHeroType}`;
+        }
+      });
     });
   </script>
 </body>
