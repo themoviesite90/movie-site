@@ -2,31 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <title>Watch | CineBuzz</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Watch Movie - CineBuzz</title>
-  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="main-header">
-    <div class="logo">
-      <h1>🎬 CineBuzz</h1>
-    </div>
-    <div class="user-nav">
-      <a href="favorites.html" class="nav-link">❤️ My List</a>
-      <a href="login.html" id="loginBtn" class="nav-link">Login</a>
-      <button id="logoutBtn" class="btn-logout" style="display:none">Logout</button>
-    </div>
-  </header>
 
-  <main class="watch-container">
-    <h2 id="movieTitle">Loading...</h2>
-    <div class="video-player">
-      <iframe id="videoIframe" width="100%" height="400" frameborder="0" allowfullscreen></iframe>
-    </div>
-    <p id="movieOverview"></p>
-  </main>
+  <a href="index.html">⬅ Back to Home</a>
 
-  <script type="module" src="auth.js"></script>
-  <script type="module" src="watch.js"></script>
+  <h1 id="watchTitle">Loading...</h1>
+  <p id="watchOverview"></p>
+
+  <div id="player" style="margin-top:20px;">
+    Loading player...
+  </div>
+
+  <script src="watch.js"></script>
 </body>
 </html>
