@@ -3,44 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Movie Details - CineBuzz</title>
+  <title>CineBuzz | Movie Details</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="main-header">
-    <div class="logo">
-      <h1>🎬 CineBuzz</h1>
-    </div>
-    <div class="user-nav">
-      <a href="favorites.html" class="nav-link">❤️ My List</a>
-      <a href="login.html" id="loginBtn" class="nav-link">Login</a>
-      <button id="logoutBtn" class="btn-logout" style="display:none">Logout</button>
-    </div>
-  </header>
 
-  <main class="movie-details-container">
-    <div class="movie-poster">
-      <img id="moviePoster" src="" alt="Poster">
-    </div>
-    <div class="movie-info">
-      <h2 id="movieTitle">Loading...</h2>
-      <p id="movieOverview"></p>
-      <p><strong>Rating:</strong> <span id="movieRating"></span></p>
-      <p><strong>Genres:</strong> <span id="movieGenres"></span></p>
-      <button id="watchTrailerBtn" class="btn-primary">▶ Watch Trailer</button>
-      <button id="favBtn" class="fav-btn">❤️ Add to My List</button>
-    </div>
-  </main>
+  <!-- Back Button -->
+  <div style="padding: 10px;">
+    <a href="index.html" style="text-decoration:none; font-size:18px;">← Back to Home</a>
+  </div>
 
-  <!-- Trailer Modal -->
-  <div id="trailerModal" class="modal">
-    <div class="modal-content">
-      <span id="closeTrailer" class="close">&times;</span>
-      <iframe id="trailerIframe" width="100%" height="400px" frameborder="0" allowfullscreen></iframe>
+  <!-- Movie Detail Section -->
+  <div style="padding:12px;">
+    <h1 id="movieTitle">Loading...</h1>
+    <p id="movieOverview"></p>
+    <p><strong>Rating:</strong> <span id="movieRating"></span></p>
+    <p><strong>Genres:</strong> <span id="movieGenres"></span></p>
+    
+    <!-- Trailer Button -->
+    <button id="watchTrailerBtn" style="padding:10px 14px; margin-top:10px; cursor:pointer;">
+      ▶ Watch Trailer
+    </button>
+
+    <!-- Favorite Button -->
+    <button id="favBtn" style="padding:10px 14px; margin-top:10px; cursor:pointer;">
+      ❤️ Add to My List
+    </button>
+
+    <!-- Trailer Modal — hidden by default -->
+    <div id="trailerModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8);">
+      <div style="position:relative; margin:60px auto; width:90%; max-width:800px;">
+        <span id="closeTrailer" style="position:absolute; right:12px; top:12px; font-size:24px; color:white; cursor:pointer;">✖</span>
+        <iframe id="trailerIframe" width="100%" height="400px" frameborder="0" allowfullscreen></iframe>
+      </div>
     </div>
   </div>
 
   <script type="module" src="auth.js"></script>
   <script type="module" src="movie.js"></script>
+
 </body>
 </html>
