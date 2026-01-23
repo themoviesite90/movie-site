@@ -1,21 +1,37 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>CineVerse</title>
+  <title>Movie Details</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header class="topbar">
-  <h2>🎬 cinebuzz</h2>
+<div class="topbar">
   <a href="index.html" class="back">← Back</a>
-</header>
+  <h2>CineBuzz</h2>
+</div>
 
-<div id="movieDetails" class="details-container">
-  <!-- Movie details will load here -->
+<div id="detailsHero"></div>
+
+<div class="details-container">
+  <div class="details-poster">
+    <img id="poster" src="">
+  </div>
+  <div class="details-info">
+    <h1 id="title"></h1>
+    <p id="meta"></p>
+    <p class="rating" id="rating"></p>
+    <p class="overview" id="overview"></p>
+
+    <div class="buttons">
+      <button id="trailerBtn">▶ Play Trailer</button>
+      <button id="favBtn">❤️ Add to My List</button>
+    </div>
+  </div>
 </div>
 
 <script src="movie.js"></script>
+
 </body>
 </html>
-<button id="favBtn">❤️ Add to Favorites</button>
