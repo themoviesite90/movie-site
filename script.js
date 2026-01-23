@@ -1,9 +1,14 @@
 const API_KEY = "b9864cdbbdcef170f412314e777c14f5";
 
-const IMG = "https://image.tmdb.org/t/p/w500";
-const TRENDING = `https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}`;
-const SEARCH = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=`;
-const DISCOVER = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_genres=`;
+let currentType = "movie"; // or "tv"
+
+function getTrending() {
+  return `https://api.themoviedb.org/3/trending/${currentType}/week?api_key=${API_KEY}`;
+}
+
+function getDiscoverByLang(lang) {
+  return `https://api.themoviedb.org/3/discover/${currentType}?api_key=${API_KEY}&with_original_language=${lang}`;
+}
 
 const moviesDiv = document.getElementById("movies");
 const searchInput = document.getElementById("search");
