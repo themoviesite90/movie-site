@@ -158,4 +158,37 @@ header h2 {
   color: white;
   border-radius: 5px;
   margin-top: 5px;
+}#hero {
+  height: 300px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  color: white;
+  display: flex;
+  align-items: flex-end;
+}
+
+#hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, #000, transparent);
+}
+
+.hero-content {
+  position: relative;
+  padding: 20px;
+  z-index: 1;
+}
+
+.hero-content h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.hero-content button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 20px;
+  margin-top: 10px;
 }
