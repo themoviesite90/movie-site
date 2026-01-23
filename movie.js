@@ -42,8 +42,6 @@ document.getElementById("trailerBtn").onclick = () => {
         alert("No trailer found!");
       }
     });
-};// Add to movie.js after trailer button code
-// Favorite functionality
 function checkFavorite() {
   const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
   const isFav = favorites.some(m => m.id == id && m.type == type);
