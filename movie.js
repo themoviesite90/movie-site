@@ -1,6 +1,6 @@
 const API_KEY = "b9864cdbbdcef170f412314e777c14f5";
 
-// Read URL parameters
+// Read URL
 const params = new URLSearchParams(window.location.search);
 const id = params.get("id");
 const type = params.get("type") || "movie";
@@ -16,10 +16,10 @@ const backdrop = document.getElementById("backdrop");
 
 if (!id) {
   titleEl.innerText = "No movie selected!";
-  throw new Error("No ID in URL");
+  throw new Error("No ID found in URL");
 }
 
-// Load movie details
+// Fetch movie data
 fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}`)
   .then(res => res.json())
   .then(movie => {
@@ -34,28 +34,29 @@ fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}`)
     }
 
     // Fetch trailer
-    return fetch(`https://api.themoviedb.org/3/${type}/${id}/videos?api_key=${API_KEY}`);
-  })
-  .then(res => res.json())
-  .then(videoData => {
-    const trailer = videoData.results.find(v => v.site === "YouTube");
+    fetch(`https://api.themoviedb.org/3/${type}/${id}/videos?api_key=${API_KEY}`)
+      .then(res => res.json())
+      .then(videoData => {
+        const trailer = videoData.results.find(v => v.site === "YouTube");
 
-    if (!trailer) {
-      watchBtn.innerText = "Trailer not available";
-      watchBtn.disabled = true;
-      return;
-    }
-
-    watchBtn.onclick = () => {
-      playerDiv.innerHTML = `
-        <iframe 
-          src="https://www.youtube.com/embed/${trailer.key}?autoplay=1"
-          allowfullscreen>
-        </iframe>
-      `;
-    };
+        if (!trailer) {
+          watchBtn.innerText = "Trailer not available";
+          watchBtn.disabled = true;
+        } else {
+          watchBtn.onclick = () => {
+            playerDiv.innerHTML = `
+              <iframe 
+                width="100%" height="450"
+                src="https://www.youtube.com/embed/${trailer.key}?autoplay=1"
+                frameborder="0"
+                allowfullscreen>
+              </iframe>
+            `;
+          };
+        }
+      });
   })
   .catch(err => {
-    console.error("Error loading movie:", err);
-    titleEl.innerText = "Failed to load movie.";
+    console.error(err);
+    titleEl.innerText = "Failed to load movie!";
   });
