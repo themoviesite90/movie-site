@@ -1,78 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>CineBuzz | Movie</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <title>CineBuzz — Watch</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0f172a;
-      color: white;
-    }
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎬</text></svg>">
 
-    .backdrop {
-      height: 60vh;
-      background-size: cover;
-      background-position: center;
-      position: relative;
-    }
+  <!-- CSS later -->
+  <link rel="stylesheet" href="movie.css">
+</head>
+<body>
 
-    .backdrop::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, #0f172a, transparent);
-    }
+  <!-- Backdrop -->
+  <div id="backdrop" class="backdrop"></div>
 
-    .content {
-      position: relative;
-      padding: 20px;
-      margin-top: -120px;
-      max-width: 900px;
-    }
+  <!-- Main Content -->
+  <div class="movie-container">
 
-    h1 {
-      margin: 0;
-      font-size: 32px;
-    }
+    <h1 id="movieTitle">Loading...</h1>
 
-    .meta {
-      margin: 10px 0;
-      color: #facc15;
-    }
+    <p class="meta">
+      ⭐ Rating: <span id="movieRating">--</span> |
+      🎭 Genres: <span id="movieGenres">--</span>
+    </p>
 
-    .overview {
-      color: #ddd;
-      line-height: 1.5;
-      margin-top: 10px;
-    }
+    <p id="movieOverview"></p>
 
-    .buttons {
-      margin-top: 20px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
+    <!-- Buttons -->
+    <div class="buttons">
+      <button id="watchBtn">▶ Watch Trailer</button>
+      <button id="favBtn">❤️ Add to My List</button>
+      <button onclick="location.href='index.html'">🏠 Home</button>
+    </div>
 
-    button {
-      padding: 12px 18px;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-    }
+    <!-- Video Player -->
+    <div id="player" class="player"></div>
 
-    .watch {
-      background: #e50914;
-      color: white;
-    }
+  </div>
 
-    .back {
-      background: #1e293b;
-      color: white;
-    }
+  <!-- Scripts -->
+  <script src="auth.js" type="module"></script>
+  <script src="movie.js"></script>
 
-    #player
+</body>
+</html>
