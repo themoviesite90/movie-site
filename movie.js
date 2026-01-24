@@ -5,13 +5,14 @@ const params = new URLSearchParams(window.location.search);
 const id = params.get("id");
 const type = params.get("type") || "movie";
 
-// Get elements
+// Elements
 const titleEl = document.getElementById("movieTitle");
 const overviewEl = document.getElementById("movieOverview");
 const ratingEl = document.getElementById("movieRating");
 const genresEl = document.getElementById("movieGenres");
 const watchBtn = document.getElementById("watchBtn");
 const playerDiv = document.getElementById("player");
+const backdrop = document.getElementById("backdrop");
 
 if (!id) {
   titleEl.innerText = "No movie selected!";
@@ -26,6 +27,11 @@ fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}`)
     overviewEl.innerText = movie.overview || "No description available.";
     ratingEl.innerText = movie.vote_average || "N/A";
     genresEl.innerText = movie.genres?.map(g => g.name).join(", ") || "N/A";
+
+    if (movie.backdrop_path) {
+      backdrop.style.backgroundImage =
+        `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`;
+    }
 
     // Fetch trailer
     return fetch(`https://api.themoviedb.org/3/${type}/${id}/videos?api_key=${API_KEY}`);
@@ -42,9 +48,9 @@ fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}`)
 
     watchBtn.onclick = () => {
       playerDiv.innerHTML = `
-        <iframe width="100%" height="400"
-          src="https://www.youtube.com/embed/${trailer.key}"
-          frameborder="0" allowfullscreen>
+        <iframe 
+          src="https://www.youtube.com/embed/${trailer.key}?autoplay=1"
+          allowfullscreen>
         </iframe>
       `;
     };
