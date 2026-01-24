@@ -4,22 +4,75 @@
   <meta charset="UTF-8">
   <title>CineBuzz | Movie</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body>
 
-  <a href="index.html">⬅ Back to Home</a>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: white;
+    }
 
-  <h1 id="movieTitle">Loading...</h1>
-  <p id="movieOverview"></p>
+    .backdrop {
+      height: 60vh;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
 
-  <p><b>⭐ Rating:</b> <span id="movieRating"></span></p>
-  <p><b>🎭 Genres:</b> <span id="movieGenres"></span></p>
+    .backdrop::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, #0f172a, transparent);
+    }
 
-  <button id="watchBtn">▶ Watch Trailer</button>
+    .content {
+      position: relative;
+      padding: 20px;
+      margin-top: -120px;
+      max-width: 900px;
+    }
 
-  <div id="player" style="margin-top:20px;"></div>
+    h1 {
+      margin: 0;
+      font-size: 32px;
+    }
 
-  <!-- IMPORTANT: normal script, NOT module -->
-  <script src="./movie.js"></script>
-</body>
-</html>
+    .meta {
+      margin: 10px 0;
+      color: #facc15;
+    }
+
+    .overview {
+      color: #ddd;
+      line-height: 1.5;
+      margin-top: 10px;
+    }
+
+    .buttons {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 12px 18px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .watch {
+      background: #e50914;
+      color: white;
+    }
+
+    .back {
+      background: #1e293b;
+      color: white;
+    }
+
+    #player
